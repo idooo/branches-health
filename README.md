@@ -14,16 +14,47 @@ glide install
 
 ## Endpoints
 
-Returns map `repository -> []branch`
+#### GET: /api/repositories
+
+Returns map `repository -> []branch`, example response:
 
 ```
-/api/repositories
+{
+    "https://github.com/idooo/test-repo": [
+        {
+            "Repository": "https://github.com/idooo/test-repo",
+            "Name": "origin/0.6.0",
+            "FullPath": "https://github.com/idooo/test-repo/origin/0.6.0",
+            "IsMerged": true,
+            "IsOutdated": true,
+            "Author": "idooo",
+            "LastUpdated": "2015-08-10T19:03:59-06:00"
+        },
+        ...
+    ]
+    ...
+}
 ```
 
-Returns list of branches `[]branch`
+#### GET: /api/branches
+
+Returns list of branches `[]branch`, example response:
 
 ```
-/api/branches
+{
+    "branches": [
+        {
+            "Repository": "https://github.com/idooo/test-repo",
+            "Name": "origin/0.6.0",
+            "FullPath": "https://github.com/idooo/test-repo/origin/0.6.0",
+            "IsMerged": true,
+            "IsOutdated": true,
+            "Author": "idooo",
+            "LastUpdated": "2015-08-10T19:03:59-06:00"
+        },
+        ...
+    ]
+}
 ```
 
 ## Configuration
