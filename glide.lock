@@ -1,0 +1,12 @@
+hash: 91a521fe43fa431031d7786d06b7b7c7c946385598c4c0b19a80bd7ea45a190e
+updated: 2017-01-07T19:23:10.812816675+10:00
+imports:
+- name: github.com/boltdb/bolt
+  version: 583e8937c61f1af6513608ccc75c97b6abdf4ff9
+- name: github.com/kataras/iris
+  version: bfac948889256ebe36e3a1b2b2dc32bbd3c7e82a
+- name: golang.org/x/sys
+  version: d75a52659825e75fff6158388dddc6a5b04f9ba5
+  subpackages:
+  - unix
+testImports: []
