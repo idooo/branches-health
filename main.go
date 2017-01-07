@@ -33,14 +33,13 @@ func getInfoAboutBranches (repositories []string, database *bolt.DB) {
 		branches := core.GetInfoFromGit(repoName)
 
 		for _, branch := range branches {
-			log.Printf("branch: %s", branch.Name)
+			log.Printf("Get info repo: %s/%s", repoName, branch.Name)
 			branch.Save(database)
 		}
 	}
 }
 
 func main() {
-
 	configuration := readConfig("config/default.json")
 
 	database, err := bolt.Open(configuration.DatabasePath, 0600, nil)
@@ -52,6 +51,7 @@ func main() {
 
 	router := core.NewRouter(database)
 
-	iris.Get("/api/repositories", router.RouteGetBranches)
+	iris.Get("/api/repositories", router.RouteGetRepositories)
+	iris.Get("/api/branches", router.RouteGetBranches)
 	iris.Listen(":" + strconv.Itoa(configuration.ServerPort))
 }

@@ -3,17 +3,19 @@ package core
 import (
 	"github.com/boltdb/bolt"
 	"encoding/json"
+	"time"
 )
 
 var bucket = []byte("branches")
 
 type Branch struct {
-	Path string
+	Repository string
 	Name string
+	FullPath string
 	IsMerged bool
 	IsOutdated bool
 	Author string
-	LastUpdated string
+	LastUpdated time.Time
 }
 
 func (branch *Branch) Save(database *bolt.DB) error {
@@ -27,7 +29,7 @@ func (branch *Branch) Save(database *bolt.DB) error {
 		if err != nil {
 			return err
 		}
-		return b.Put([]byte(branch.Path), encoded)
+		return b.Put([]byte(branch.FullPath), encoded)
 	})
 	return err
 }

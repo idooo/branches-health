@@ -17,6 +17,24 @@ func NewRouter(db *bolt.DB) API {
 }
 
 
+func (api API) RouteGetRepositories(ctx *iris.Context)  {
+	branches, err := GetBranches(database)
+	if err != nil {
+		ctx.JSON(iris.StatusNotFound, iris.Map{"status": "error"})
+	} else {
+		repositories := make(map[string][]Branch)
+
+		for _, branch := range branches {
+			if _, present := repositories[branch.Repository]; !present {
+				repositories[branch.Repository] = make([]Branch, 0)
+			}
+			repositories[branch.Repository] = append(repositories[branch.Repository], branch)
+		}
+
+		ctx.JSON(iris.StatusOK, repositories)
+	}
+}
+
 func (api API) RouteGetBranches(ctx *iris.Context)  {
 	branches, err := GetBranches(database)
 	if err != nil {
@@ -25,4 +43,5 @@ func (api API) RouteGetBranches(ctx *iris.Context)  {
 		ctx.JSON(iris.StatusOK, iris.Map{"branches": branches})
 	}
 }
+
 

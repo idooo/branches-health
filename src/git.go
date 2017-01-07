@@ -8,6 +8,8 @@ import (
 	"io/ioutil"
 	"os"
 	"regexp"
+	"time"
+	"fmt"
 )
 
 func runGitCommand(args []string) string {
@@ -24,15 +26,24 @@ func runGitCommand(args []string) string {
 }
 
 func getBranchData (repoName, branchName string, isMerged, isOutdated bool) Branch {
-	info := runGitCommand([]string{"show", "--format=\"%ci,%an,%cn\"", branchName})
+	info := runGitCommand([]string{"show", "--format=%cI,%an,%cn", branchName})
 	info2 := strings.Split(strings.Split(info, "\n")[0], ",")
+
+	lastUpdated, err := time.Parse(time.RFC3339, info2[0])
+
+	if err != nil {
+		fmt.Printf("Can't convert date from git log %s/%s - %s", repoName, branchName, info[0])
+		lastUpdated = time.Now()
+	}
+
 	return Branch{
-		repoName + "/" + branchName,
+		repoName,
 		branchName,
+		repoName + "/" + branchName,
 		isMerged,
 		isOutdated,
 		info2[1],
-		info2[0],
+		lastUpdated,
 	}
 }
 
@@ -57,7 +68,7 @@ func GetInfoFromGit(repoName string) []Branch {
 	for _, branchName := range strings.Split(merged, "\n") {
 		if master.MatchString(strings.TrimSpace(branchName)) { continue }
 		if len(branchName) == 0 { continue }
-		branches = append(branches, getBranchData(repoName, strings.TrimSpace(branchName), true, false))
+		branches = append(branches, getBranchData(repoName, strings.TrimSpace(branchName), true, true))
 	}
 
 	notMerged := runGitCommand([]string{"branch", "-r", "--no-merged"})
