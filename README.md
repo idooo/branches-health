@@ -14,6 +14,14 @@ glide install
 go build
 ```
 
+Here we also serve a simple HTML page from `/` that must be "compiled" first using `./compile-template.sh`
+script that will update `core/template.go`. During development you can specify path to your assets
+folder to use it directly:
+
+```
+./branches-health -dev-assets=/path/to/branches-health/assets
+```
+
 ## Run
 
 Pass configuration file

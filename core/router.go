@@ -3,16 +3,26 @@ package core
 import (
 	"github.com/boltdb/bolt"
 	"github.com/kataras/iris"
+	"io/ioutil"
+	"fmt"
 )
 
 var database *bolt.DB
+var pathToAssets string;
 
 type API struct {
 	*iris.Context
 }
 
-func NewRouter(db *bolt.DB) API {
+func NewRouter(db *bolt.DB, assetsPath string) API {
 	database = db
+	pathToAssets = assetsPath
+
+	if len(pathToAssets) > 0 {
+		fmt.Print("Using development version of assets")
+	} else {
+		fmt.Print("Using compiled version of assets")
+	}
 	return API{}
 }
 
@@ -44,4 +54,14 @@ func (api API) RouteGetBranches(ctx *iris.Context)  {
 	}
 }
 
-
+func (api API) RouteGetIndex(ctx *iris.Context)  {
+	if len(pathToAssets) > 0 {
+		data, err := ioutil.ReadFile(pathToAssets + "/index.html")
+		if err != nil {
+			fmt.Printf("Can't open index.html: %s", err)
+		}
+		ctx.HTML(iris.StatusOK, string(data))
+	} else {
+		ctx.HTML(iris.StatusOK, IndexTemplate)
+	}
+}

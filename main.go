@@ -74,6 +74,11 @@ func main() {
 		"/etc/branches-health/config.json",
 		"path to a configuration file")
 
+	assetsPathPtr := flag.String(
+		"dev-assets",
+		"",
+		"path to a assets folder")
+
 	flag.Parse()
 
 	configuration := readConfig(*configPathPtr)
@@ -94,8 +99,9 @@ func main() {
 	go getInfoAboutBranches(*configuration.Repositories, database)
 
 	// Setup Iris to serve HTTP requests
-	router := core.NewRouter(database)
+	router := core.NewRouter(database, *assetsPathPtr)
 	iris.Get("/api/repositories", router.RouteGetRepositories)
 	iris.Get("/api/branches", router.RouteGetBranches)
+	iris.Get("/", router.RouteGetIndex)
 	iris.Listen(":" + strconv.Itoa(*configuration.ServerPort))
 }
