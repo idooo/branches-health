@@ -1,7 +1,4 @@
 language: go
-os:
-    - linux
-    - osx
 go:
     - 1.7.x
 install:
@@ -20,3 +17,4 @@ deploy:
     - branches-health
   on:
     repo: idooo/branches-health
+    tags: true
