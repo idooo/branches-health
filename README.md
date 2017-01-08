@@ -4,12 +4,22 @@ Simple service that retrieves information from git repositories
 about remote branches and exposes two HTTP endpoints with information
 that shows which of them were merged and which not updated for a white
 
-## Install
+## Build
 
-Here we use `glide` for dependency management so do this:
+Here we use `glide` for dependency management so do this. 
+Travis CI build releases only for linux:
 
 ```
 glide install
+go build
+```
+
+## Run
+
+Pass configuration file. Please check `config/default.json` for the details 
+
+```
+./branches-health -config=./config/default.json
 ```
 
 ## Endpoints
@@ -56,10 +66,6 @@ Returns list of branches `[]branch`, example response:
     ]
 }
 ```
-
-## Configuration
-
-Please check `config/default.json`
 
 
 # License

@@ -77,3 +77,4 @@ fabric.properties
 .idea
 
 *.db
+/branches-health

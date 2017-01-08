@@ -8,12 +8,13 @@ import (
 	"encoding/json"
 	"github.com/kataras/iris"
 	"strconv"
+	"flag"
 )
 
 type Configuration struct {
-	Repositories	[]string
-	DatabasePath	string
-	ServerPort	int
+	Repositories	*[]string
+	DatabasePath	*string
+	ServerPort	*int
 }
 
 func readConfig (filename string) Configuration {
@@ -22,8 +23,25 @@ func readConfig (filename string) Configuration {
 	configuration := Configuration{}
 	err := decoder.Decode(&configuration)
 	if err != nil {
-		log.Fatalf("Can't read configuration file %s : %s", filename, err)
+		log.Printf("Can't read configuration file %s : %s", filename, err)
 	}
+
+	if configuration.DatabasePath == nil {
+		currPath, _ := os.Getwd()
+		defaultPath := currPath + "/branches-health.db"
+		configuration.DatabasePath = &defaultPath
+	}
+
+	if configuration.Repositories == nil {
+		defaultRepos := make([]string, 0)
+		configuration.Repositories = &defaultRepos
+	}
+
+	if configuration.ServerPort == nil {
+		defaultPort := 8080
+		configuration.ServerPort = &defaultPort
+	}
+
 	return configuration
 }
 
@@ -33,25 +51,33 @@ func getInfoAboutBranches (repositories []string, database *bolt.DB) {
 		branches := core.GetInfoFromGit(repoName)
 
 		for _, branch := range branches {
-			log.Printf("Get info repo: %s/%s", repoName, branch.Name)
+			log.Printf("Get information about: %s/%s", repoName, branch.Name)
 			branch.Save(database)
 		}
 	}
 }
 
 func main() {
-	configuration := readConfig("config/default.json")
 
-	database, err := bolt.Open(configuration.DatabasePath, 0600, nil)
+	configPathPtr := flag.String(
+		"config",
+		"/etc/branches-health/config.json",
+		"path to a configuration file")
+
+	flag.Parse()
+
+	configuration := readConfig(*configPathPtr)
+
+	database, err := bolt.Open(*configuration.DatabasePath, 0600, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	go getInfoAboutBranches(configuration.Repositories, database)
+	go getInfoAboutBranches(*configuration.Repositories, database)
 
 	router := core.NewRouter(database)
 
 	iris.Get("/api/repositories", router.RouteGetRepositories)
 	iris.Get("/api/branches", router.RouteGetBranches)
-	iris.Listen(":" + strconv.Itoa(configuration.ServerPort))
+	iris.Listen(":" + strconv.Itoa(*configuration.ServerPort))
 }

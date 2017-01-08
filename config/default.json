@@ -2,6 +2,6 @@
   "Repositories": [
     "https://github.com/mzabriskie/axios"
   ],
-  "DatabasePath": "data/data.db",
+  "DatabasePath": "/tmp/branches-health.db",
   "ServerPort": 8080
 }
