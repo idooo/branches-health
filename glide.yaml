@@ -9,3 +9,5 @@ import:
   subpackages:
   - cipher
   - json
+- package: github.com/robfig/cron
+  version: ~1.0.0

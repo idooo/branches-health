@@ -9,14 +9,18 @@ import (
 	"github.com/kataras/iris"
 	"strconv"
 	"flag"
+	"github.com/robfig/cron"
 )
 
 type Configuration struct {
 	Repositories	*[]string
 	DatabasePath	*string
 	ServerPort	*int
+	UpdateSchedule	*string
 }
 
+// Reads configuration file from the specified location and
+// applies the default values if needed
 func readConfig (filename string) Configuration {
 	file, _ := os.Open(filename)
 	decoder := json.NewDecoder(file)
@@ -42,9 +46,15 @@ func readConfig (filename string) Configuration {
 		configuration.ServerPort = &defaultPort
 	}
 
+	if configuration.UpdateSchedule == nil {
+		defaultSchedule := "@midnight"
+		configuration.UpdateSchedule = &defaultSchedule
+	}
+
 	return configuration
 }
 
+// Iterates through repositories, gets data and saves it to a database
 func getInfoAboutBranches (repositories []string, database *bolt.DB) {
 
 	for _, repoName := range repositories {
@@ -73,10 +83,18 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Schedule job to run regularly
+	c := cron.New()
+	c.AddFunc(*configuration.UpdateSchedule, func() {
+		getInfoAboutBranches(*configuration.Repositories, database)
+	})
+	c.Start()
+
+	// Execute our first job
 	go getInfoAboutBranches(*configuration.Repositories, database)
 
+	// Setup Iris to serve HTTP requests
 	router := core.NewRouter(database)
-
 	iris.Get("/api/repositories", router.RouteGetRepositories)
 	iris.Get("/api/branches", router.RouteGetBranches)
 	iris.Listen(":" + strconv.Itoa(*configuration.ServerPort))

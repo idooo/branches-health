@@ -1,5 +1,5 @@
-hash: 9f71feb567c94a884d8908e788c51f9af745fcec98bf6a33c6cd5c275ff6fc4b
-updated: 2017-01-08T12:11:06.350152998+10:00
+hash: 0248fbb504a79deff720be6bc16f9d4e0ae9f6b93f64f77fffe9ac92682232fa
+updated: 2017-01-08T13:44:49.540345+10:00
 imports:
 - name: github.com/boltdb/bolt
   version: 583e8937c61f1af6513608ccc75c97b6abdf4ff9
@@ -79,6 +79,8 @@ imports:
   version: e79763773ab6222ca1d5a7cbd9d62d83c1f77081
 - name: github.com/miekg/dns
   version: 4744e915eb51a9defb5fb13c24ce2c8408d2fd98
+- name: github.com/robfig/cron
+  version: b024fc5ea0e34bc3f83d9941c8d60b0622bfaca4
 - name: github.com/russross/blackfriday
   version: 5f33e7b7878355cd2b7e6b8eefc48a5472c69f70
 - name: github.com/shurcooL/sanitized_anchor_name

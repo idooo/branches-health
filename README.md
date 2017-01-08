@@ -16,10 +16,25 @@ go build
 
 ## Run
 
-Pass configuration file. Please check `config/default.json` for the details 
+Pass configuration file
 
 ```
 ./branches-health -config=./config/default.json
+```
+
+Properties on configuration file can explain themselves. Check `config/example.json`.
+Read [robfig/cron docs](https://godoc.org/github.com/robfig/cron) to know more about `UpdateSchedule`
+property format
+
+```json
+{
+  "Repositories": [
+    "https://github.com/idooo/test"
+  ],
+  "DatabasePath": "/tmp/branches-health.db",
+  "ServerPort": 8080,
+  "UpdateSchedule": "@midnight" 
+}
 ```
 
 ## Endpoints
