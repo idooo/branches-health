@@ -38,7 +38,7 @@ func getBranchData (repoName, branchName string, isMerged, isOutdated bool) Bran
 
 	return Branch{
 		repoName,
-		branchName,
+		strings.Replace(branchName, "origin/", "", -1),
 		repoName + "/" + branchName,
 		isMerged,
 		isOutdated,
