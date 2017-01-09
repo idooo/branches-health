@@ -1,4 +1,4 @@
-# Branch Blame
+# Branch Blame ![Build Status](https://travis-ci.org/idooo/branches-health.svg?branch=master "Build Status")
 
 Simple service that retrieves information from git repositories
 about remote branches and exposes two HTTP endpoints with information
