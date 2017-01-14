@@ -5,7 +5,7 @@ about remote branches and provides an info which of them were merged and which n
 
 ## Build
 
-`glide` was used for dependency management here this should work: 
+`glide` was used for dependency management here so this should work: 
 
 ```
 glide install
