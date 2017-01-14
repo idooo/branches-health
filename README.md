@@ -1,7 +1,6 @@
 # Branches Health [![Build Status](https://travis-ci.org/idooo/branches-health.svg?branch=master)](https://travis-ci.org/idooo/branches-health)
 
-Simple service that retrieves meta data from git repositories
-about remote branches and provides an info which of them were merged and which not updated for a white
+Simple service that retrieves meta data from git repositories and provides an info which of branches were already merged and which not updated for a while
 
 ## Build
 
