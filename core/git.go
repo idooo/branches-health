@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"time"
 	"fmt"
+	"strconv"
 )
 
 func runGitCommand(args []string) string {
@@ -26,14 +27,18 @@ func runGitCommand(args []string) string {
 }
 
 func getBranchData (repoName, branchName string, isMerged, isOutdated bool) Branch {
-	info := runGitCommand([]string{"show", "--format=%cI,%an,%cn", branchName})
-	info2 := strings.Split(strings.Split(info, "\n")[0], ",")
+	output := runGitCommand([]string{"show", "--format=%ct,%an,%cn", branchName})
+	info := strings.Split(strings.Split(output, "\n")[0], ",")
 
-	lastUpdated, err := time.Parse(time.RFC3339, info2[0])
+	lastAuthor := info[1]
 
-	if err != nil {
+	var lastUpdated time.Time
+	lastUpdatedInt, errParseInt := strconv.ParseInt(info[0], 10, 64)
+	if errParseInt != nil {
 		fmt.Printf("Can't convert date from git log %s/%s - %s", repoName, branchName, info[0])
 		lastUpdated = time.Now()
+	} else {
+		lastUpdated = time.Unix(lastUpdatedInt, 0)
 	}
 
 	return Branch{
@@ -42,11 +47,10 @@ func getBranchData (repoName, branchName string, isMerged, isOutdated bool) Bran
 		repoName + "/" + branchName,
 		isMerged,
 		isOutdated,
-		info2[1],
+		lastAuthor,
 		lastUpdated,
 	}
 }
-
 
 func GetInfoFromGit(repoName string) []Branch {
 
