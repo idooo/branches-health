@@ -54,19 +54,6 @@ func readConfig (filename string) Configuration {
 	return configuration
 }
 
-// Iterates through repositories, gets data and saves it to a database
-func getInfoAboutBranches (repositories []string, database *bolt.DB) {
-
-	for _, repoName := range repositories {
-		branches := core.GetInfoFromGit(repoName)
-
-		for _, branch := range branches {
-			log.Printf("Get information about: %s/%s", repoName, branch.Name)
-			branch.Save(database)
-		}
-	}
-}
-
 func main() {
 
 	configPathPtr := flag.String(
@@ -91,12 +78,12 @@ func main() {
 	// Schedule job to run regularly
 	c := cron.New()
 	c.AddFunc(*configuration.UpdateSchedule, func() {
-		getInfoAboutBranches(*configuration.Repositories, database)
+		core.GetBranchesInfoForRepos(*configuration.Repositories, database)
 	})
 	c.Start()
 
 	// Execute our first job
-	go getInfoAboutBranches(*configuration.Repositories, database)
+	go core.GetBranchesInfoForRepos(*configuration.Repositories, database)
 
 	// Setup Iris to serve HTTP requests
 	router := core.NewRouter(database, *assetsPathPtr)

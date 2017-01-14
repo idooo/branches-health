@@ -1,6 +1,7 @@
 {
   "Repositories": [
-    "https://github.com/mzabriskie/axios"
+    "https://github.com/mzabriskie/axios",
+    "https://github.com/labstack/echo"
   ],
   "DatabasePath": "/tmp/branches-health.db",
   "ServerPort": 8080,
