@@ -8,49 +8,62 @@ const IndexTemplate = `<!DOCTYPE html>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js" integrity="sha256-Gn7MUQono8LUxTfRA0WZzJgTua52Udm1Ifrk5421zkA=" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div ng-app="branchesHealth" ng-controller="app as $ctrl">
 
-        <div class="statistics">
+    <div ng-app="branchesHealth" ng-controller="app as $ctrl" id="content">
+
+        <div class="block">
             <h1>Statistics</h1>
-            <div>Keep: {{$ctrl.info.keep}}</div>
-            <div>To Delete: {{$ctrl.info.toDelete}}</div>
-            <div>Old: {{$ctrl.info.old}}</div>
+            <table class="statistics">
+                <tr>
+                    <td>Keep: {{$ctrl.info.keep}}</td>
+                    <td>To Delete: {{$ctrl.info.toDelete}}</td>
+                    <td>Old: {{$ctrl.info.old}}</td>
+                </tr>
+            </table>
         </div>
 
-        <div class="leaderboard">
+        <div class="block">
 
             <h1>Leaderboard</h1>
-            <h2>Keep branches</h2>
-            <div ng-repeat="person in $ctrl.leaderboard.keep">
-                {{person.name}} - {{person.keep}}
-            </div>
-            <h2>Old branches</h2>
-            <div ng-repeat="person in $ctrl.leaderboard.old">
-                {{person.name}} - {{person.old}}
-            </div>
-            <h2>To delete</h2>
-            <div ng-repeat="person in $ctrl.leaderboard.toDelete">
-                {{person.name}} - {{person.toDelete}}
-            </div>
+            <table class="statistics">
+                <tr>
+                    <td ng-repeat="t in ['keep', 'old', 'toDelete']">
+                        <div ng-repeat="person in $ctrl.leaderboard[t]">
+                            {{person.name}} - {{person[t]}}
+                        </div>
+                    </td>
+                </tr>
+            </table>
 
         </div>
 
-        <div class="branches">
+        <div class="block">
             <h1>Branches</h1>
             <div ng-repeat="(repositoryName, branches) in $ctrl.repositories">
                 <h2>{{repositoryName}}</h2>
                 <table>
-                    <tr ng-repeat="branch in branches">
-                        <td>{{branch.Name}}</td>
-                        <td>{{branch.Author}}</td>
-                        <td>{{branch.LastUpdated}}</td>
-                        <td>{{branch.IsMerged}}</td>
-                        <td>{{branch.IsOutdated}}</td>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>Branch name</th>
+                            <th colspan="2">Last changed by</th>
+                            <th>Is merged?</th>
+                            <th>Is outdated?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="branch in branches">
+                            <td>{{branch.Name}}</td>
+                            <td>{{branch.Author}}</td>
+                            <td>{{branch.LastUpdated}}</td>
+                            <td>{{branch.IsMerged ? 'yes' : 'no'}}</td>
+                            <td>{{branch.IsOutdated ? 'yes' : 'no'}}</td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>
     </div>
+
 </body>
 
 <script type="application/javascript">
@@ -121,5 +134,105 @@ const IndexTemplate = `<!DOCTYPE html>
         .controller("app", controller);
 
 </script>
+
+<style>
+
+    /* http://meyerweb.com/eric/tools/css/reset/
+       v2.0 | 20110126
+       License: none (public domain)
+    */
+
+    html, body, div, span, applet, object, iframe,
+    h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+    a, abbr, acronym, address, big, cite, code,
+    del, dfn, em, img, ins, kbd, q, s, samp,
+    small, strike, strong, sub, sup, tt, var,
+    b, u, i, center,
+    dl, dt, dd, ol, ul, li,
+    fieldset, form, label, legend,
+    table, caption, tbody, tfoot, thead, tr, th, td,
+    article, aside, canvas, details, embed,
+    figure, figcaption, footer, header, hgroup,
+    menu, nav, output, ruby, section, summary,
+    time, mark, audio, video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+    }
+    /* HTML5 display-role reset for older browsers */
+    article, aside, details, figcaption, figure,
+    footer, header, hgroup, menu, nav, section {
+        display: block;
+    }
+    body {
+        line-height: 1;
+    }
+    ol, ul {
+        list-style: none;
+    }
+    blockquote, q {
+        quotes: none;
+    }
+    blockquote:before, blockquote:after,
+    q:before, q:after {
+        content: '';
+        content: none;
+    }
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+</style>
+
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        line-height: 1.3;
+    }
+
+    h1 {
+        font-size: 2em;
+        font-weight: 600;
+        padding-top: .25em;
+        padding-bottom: .5em;
+    }
+
+    h2 {
+        font-size: 1.5em;
+        font-weight: 600;
+        padding-top: .5em;
+        padding-bottom: .3em;
+    }
+
+    table {
+        width: 100%;
+    }
+
+        table tr th {
+            text-align: left;
+            padding-bottom: .5em;
+            color: #a2a2a2;
+            font-size: .8em;
+        }
+
+        table.statistics tr td {
+            width: 33.3%;
+        }
+
+
+    #content {
+        width: 100%;
+        max-width: 960px;
+        margin: 0 auto;
+    }
+
+    .block {
+        margin-bottom: 2em;
+    }
+
+</style>
 
 </html>`
