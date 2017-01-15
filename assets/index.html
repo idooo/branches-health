@@ -14,43 +14,55 @@
             <h1>Statistics</h1>
             <table class="statistics">
                 <tr>
-                    <td>Keep: {{$ctrl.info.keep}}</td>
-                    <td>To Delete: {{$ctrl.info.toDelete}}</td>
-                    <td>Old: {{$ctrl.info.old}}</td>
-                </tr>
-            </table>
-        </div>
+                    <td>
+                        <div>Keep:</div>
+                        <div class="count">{{$ctrl.info.keep}}</div>
 
-        <div class="block">
+                        <div ng-repeat="person in $ctrl.people | orderBy:'-keep'" ng-show="person.keep">
+                            {{person.name}} - {{person.keep}}
+                        </div>
+                    </td>
+                    <td>
+                        <h4>Check:</h4>
+                        <div class="count">{{$ctrl.info.old}}</div>
 
-            <h1>Leaderboard</h1>
-            <table class="statistics">
-                <tr>
-                    <td ng-repeat="t in ['keep', 'old', 'toDelete']">
-                        <div ng-repeat="person in $ctrl.leaderboard[t]">
-                            {{person.name}} - {{person[t]}}
+                        <div ng-repeat="person in $ctrl.people | orderBy:'-old'" ng-show="person.old">
+                            {{person.name}} - {{person.old}}
+                        </div>
+                    </td>
+                    <td>
+                        <h4>Delete:</h4>
+                        <div class="count">{{$ctrl.info.toDelete}}</div>
+
+                        <div ng-repeat="person in $ctrl.people | orderBy:'-toDelete'" ng-show="person.toDelete">
+                            {{person.name}} - {{person.toDelete}}
                         </div>
                     </td>
                 </tr>
             </table>
-
         </div>
 
         <div class="block">
-            <h1>Branches</h1>
-            <div ng-repeat="(repositoryName, branches) in $ctrl.repositories">
+            <h1>
+                Branches
+                <input type="text" ng-model="$ctrl.authorFilterField" class="filter-field" placeholder="filter by branch name, author, date">
+            </h1>
+            <div ng-repeat="(repositoryName, branches) in $ctrl.repositories" ng-show="branchesFound.length">
                 <h2>{{repositoryName}}</h2>
-                <table>
+                <table class="branches">
                     <thead>
                         <tr>
-                            <th>Branch name</th>
-                            <th colspan="2">Last changed by</th>
-                            <th>Is merged?</th>
-                            <th>Is outdated?</th>
+                            <th class="branch-name">Branch name</th>
+                            <th class="changed-by">Last changed by</th>
+                            <th class="changed-time"></th>
+                            <th class="is-merged">Is merged?</th>
+                            <th class="is-outdated">Is outdated?</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="branch in branches">
+                        <tr ng-repeat="branch in branches | filter:$ctrl.authorFilterField as branchesFound"
+                            ng-class="{'status-warn': branch.IsOutdated,
+                                       'status-bad': branch.IsMerged}">
                             <td>{{branch.Name}}</td>
                             <td>{{branch.Author}}</td>
                             <td>{{branch.LastUpdated}}</td>
@@ -67,14 +79,17 @@
 
 <script type="application/javascript">
 
-    function controller ($http) {
+    angular.module("branchesHealth", []).controller("app", controller);
+
+    function controller ($http, $scope) {
+        this.authorFilterField = '';
         this.repositories = [];
         this.info = {
             keep: 0,
             toDelete: 0,
             old: 0
         };
-        this.people = {};
+        this.people = [];
         this.leaderboard = {
             keep: [],
             toDelete: [],
@@ -83,54 +98,50 @@
 
         $http.get('/api/branches').then(response => {
             const branches = response.data.branches;
-
+            const people = {};
             branches.forEach(branch => {
-                if (this.people[branch.Author] === undefined) {
-                    this.people[branch.Author] = {
+                if (people[branch.Author] === undefined) {
+                    people[branch.Author] = {
                         keep: 0,
                         toDelete: 0,
                         old: 0
                     };
                 }
                 if (branch.IsMerged) {
-                    this.people[branch.Author].toDelete++;
+                    people[branch.Author].toDelete++;
                     this.info.toDelete++;
                 }
                 else if (branch.IsOutdated) {
-                    this.people[branch.Author].old++;
+                    people[branch.Author].old++;
                     this.info.old++;
                 }
                 else {
-                    this.people[branch.Author].keep++;
+                    people[branch.Author].keep++;
                     this.info.keep++;
                 }
             });
 
-            {
-                const people = [];
-                Object.keys(this.people)
-                    .forEach(name => people.push(Object.assign({name}, this.people[name])));
-
-                this.leaderboard.toDelete = people.sort((a, b) => b.toDelete - a.toDelete);
-                this.leaderboard.old = people.sort((a, b) => b.old - a.old);
-                this.leaderboard.keep = people.sort((a, b) => b.keep - a.keep);
-            }
-
+            Object.keys(people)
+                .forEach(name => this.people.push(Object.assign({name}, people[name])));
         });
 
         $http.get('/api/repositories').then(response => {
             this.repositories = response.data;
             Object.keys(this.repositories).forEach(repositoryName => {
-                this.repositories[repositoryName].forEach(branch => {
-                    branch.LastUpdated = moment(branch.LastUpdated).fromNow()
-                })
+                this.repositories[repositoryName] = this.repositories[repositoryName]
+                    .map(branch => {
+                        branch.LastUpdatedMoment = moment(branch.LastUpdated);
+                        branch.LastUpdated = branch.LastUpdatedMoment.fromNow();
+                        return branch;
+                    })
+                    .sort((a, b) => {
+                        if (a.IsMerged && b.IsMerged) return a.LastUpdatedMoment - b.LastUpdatedMoment;
+                        return a.IsMerged ? (b.IsMerged ? 0 : -1) : 1;
+                    })
             })
         })
-    }
 
-    angular
-        .module("branchesHealth", [])
-        .controller("app", controller);
+    }
 
 </script>
 
@@ -196,14 +207,14 @@
         font-size: 2em;
         font-weight: 600;
         padding-top: .25em;
-        padding-bottom: .5em;
+        padding-bottom: .2em;
     }
 
     h2 {
         font-size: 1.5em;
         font-weight: 600;
         padding-top: .5em;
-        padding-bottom: .3em;
+        padding-bottom: .2em;
     }
 
     table {
@@ -221,6 +232,32 @@
             width: 33.3%;
         }
 
+        table.branches {
+            margin-bottom: 1em;
+        }
+
+            table.branches tr > * {
+                padding: 0.1em 0.5em;
+                line-height: 1.6;
+            }
+
+                th.branch-name {width: 30%;}
+                th.changed-by {width: 30%;}
+                th.changed-time {width: 20%;}
+                th.is-merged {width: 10%;}
+                th.is-outdated {width: 10%;}
+
+    .status-bad {
+        background-color: rgba(236, 100, 75, 0.5) !important;
+    }
+
+    .status-warn {
+        background-color: rgba(245, 215, 110, 0.5);
+    }
+
+    .count {
+        font-size: 3em;
+    }
 
     #content {
         width: 100%;
@@ -231,6 +268,20 @@
     .block {
         margin-bottom: 2em;
     }
+
+    .filter-field {
+        font-size: 0.5em;
+        border: 0;
+        border-bottom: 0.1em solid black;
+        padding: 0 0.2em;
+        width: 30%;
+        outline: none;
+        opacity: 0.3;
+    }
+
+        .filter-field:focus {
+            opacity: 1;
+        }
 
 </style>
 
