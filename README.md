@@ -1,22 +1,19 @@
 # Branches Health [![Build Status](https://travis-ci.org/idooo/branches-health.svg?branch=master)](https://travis-ci.org/idooo/branches-health)
 
-Simple service that retrieves information from git repositories
-about remote branches and exposes two HTTP endpoints with information
-that shows which of them were merged and which not updated for a white
+Simple service that retrieves meta data from git repositories and provides an info which of branches were already merged and which not updated for a while
 
 ## Build
 
-Here we use `glide` for dependency management so do this. 
-Travis CI build releases only for linux:
+`glide` was used for dependency management here so this should work: 
 
 ```
 glide install
 go build
 ```
 
-Here we also serve a simple HTML page from `/` that must be "compiled" first using `./compile-template.sh`
-script that will update `core/template.go`. During development you can specify path to your assets
-folder to use it directly:
+There is also a simple HTML page served from `/` that must be "compiled" to be a part of app's code. So use `./compile-template.sh` script that will update `core/template.go`. 
+
+During development you can specify path to serve your assets folder directly:
 
 ```
 ./branches-health -dev-assets=/path/to/branches-health/assets
@@ -24,15 +21,14 @@ folder to use it directly:
 
 ## Run
 
-Pass configuration file
+Pass a path to configuration file
 
 ```
 ./branches-health -config=./config/default.json
 ```
 
-Properties on configuration file can explain themselves. Check `config/example.json`.
-Read [robfig/cron docs](https://godoc.org/github.com/robfig/cron) to know more about `UpdateSchedule`
-property format
+Properties in a configuration file are easy to understand. Check `config/example.json` for example.
+Read [robfig/cron docs](https://godoc.org/github.com/robfig/cron) to know more about `UpdateSchedule` format
 
 ```json
 {
@@ -71,7 +67,7 @@ Returns map `repository -> []branch`, example response:
 
 #### GET: /api/branches
 
-Returns list of branches `[]branch`, example response:
+Returns a list of branches `[]branch`, example response:
 
 ```
 {
