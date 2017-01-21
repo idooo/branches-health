@@ -1,14 +1,14 @@
 package core
 
 import (
+	"fmt"
 	"github.com/boltdb/bolt"
 	"github.com/kataras/iris"
 	"io/ioutil"
-	"fmt"
 )
 
 var database *bolt.DB
-var pathToAssets string;
+var pathToAssets string
 
 type API struct {
 	*iris.Context
@@ -26,8 +26,7 @@ func NewRouter(db *bolt.DB, assetsPath string) API {
 	return API{}
 }
 
-
-func (api API) RouteGetRepositories(ctx *iris.Context)  {
+func (api API) RouteGetRepositories(ctx *iris.Context) {
 	branches, err := GetBranches(database)
 	if err != nil {
 		ctx.JSON(iris.StatusNotFound, iris.Map{"status": "error"})
@@ -45,7 +44,7 @@ func (api API) RouteGetRepositories(ctx *iris.Context)  {
 	}
 }
 
-func (api API) RouteGetBranches(ctx *iris.Context)  {
+func (api API) RouteGetBranches(ctx *iris.Context) {
 	branches, err := GetBranches(database)
 	if err != nil {
 		ctx.JSON(iris.StatusNotFound, iris.Map{"status": "error"})
@@ -54,7 +53,7 @@ func (api API) RouteGetBranches(ctx *iris.Context)  {
 	}
 }
 
-func (api API) RouteGetIndex(ctx *iris.Context)  {
+func (api API) RouteGetIndex(ctx *iris.Context) {
 	if len(pathToAssets) > 0 {
 		data, err := ioutil.ReadFile(pathToAssets + "/index.html")
 		if err != nil {

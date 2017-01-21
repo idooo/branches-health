@@ -1,27 +1,27 @@
 package main
 
 import (
-	"log"
 	"branches-health/core"
-	"github.com/boltdb/bolt"
-	"os"
 	"encoding/json"
-	"github.com/kataras/iris"
-	"strconv"
 	"flag"
+	"github.com/boltdb/bolt"
+	"github.com/kataras/iris"
 	"github.com/robfig/cron"
+	"log"
+	"os"
+	"strconv"
 )
 
 type Configuration struct {
-	Repositories	*[]string
-	DatabasePath	*string
-	ServerPort	*int
-	UpdateSchedule	*string
+	Repositories   *[]string
+	DatabasePath   *string
+	ServerPort     *int
+	UpdateSchedule *string
 }
 
 // Reads configuration file from the specified location and
 // applies the default values if needed
-func readConfig (filename string) Configuration {
+func readConfig(filename string) Configuration {
 	file, _ := os.Open(filename)
 	decoder := json.NewDecoder(file)
 	configuration := Configuration{}

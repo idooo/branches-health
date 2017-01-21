@@ -1,20 +1,20 @@
 package core
 
 import (
-	"github.com/boltdb/bolt"
 	"encoding/json"
+	"github.com/boltdb/bolt"
 	"time"
 )
 
 var bucket = []byte("branches")
 
 type Branch struct {
-	Repository string
-	Name string
-	FullPath string
-	IsMerged bool
-	IsOutdated bool
-	Author string
+	Repository  string
+	Name        string
+	FullPath    string
+	IsMerged    bool
+	IsOutdated  bool
+	Author      string
 	LastUpdated time.Time
 }
 
