@@ -16,26 +16,26 @@
                 <tr>
                     <td>
                         <div>Keep:</div>
-                        <div class="count">{{$ctrl.info.keep}}</div>
+                        <div class="count">{{::$ctrl.info.keep}}</div>
 
                         <div ng-repeat="person in $ctrl.people | orderBy:'-keep'" ng-show="person.keep">
-                            {{person.name}} - {{person.keep}}
+                            {{::person.name}} - {{::person.keep}}
                         </div>
                     </td>
                     <td>
                         <h4>Check:</h4>
-                        <div class="count">{{$ctrl.info.old}}</div>
+                        <div class="count">{{::$ctrl.info.old}}</div>
 
                         <div ng-repeat="person in $ctrl.people | orderBy:'-old'" ng-show="person.old">
-                            {{person.name}} - {{person.old}}
+                            {{::person.name}} - {{::person.old}}
                         </div>
                     </td>
                     <td>
                         <h4>Delete:</h4>
-                        <div class="count">{{$ctrl.info.toDelete}}</div>
+                        <div class="count">{{::$ctrl.info.toDelete}}</div>
 
                         <div ng-repeat="person in $ctrl.people | orderBy:'-toDelete'" ng-show="person.toDelete">
-                            {{person.name}} - {{person.toDelete}}
+                            {{::person.name}} - {{::person.toDelete}}
                         </div>
                     </td>
                 </tr>
@@ -48,7 +48,7 @@
                 <input type="text" ng-model="$ctrl.authorFilterField" class="filter-field" placeholder="filter by branch name, author, date">
             </h1>
             <div ng-repeat="(repositoryName, branches) in $ctrl.repositories" ng-show="branchesFound.length">
-                <h2>{{repositoryName}}</h2>
+                <h2>{{::repositoryName}}</h2>
                 <table class="branches">
                     <thead>
                         <tr>
@@ -63,11 +63,11 @@
                         <tr ng-repeat="branch in branches | filter:$ctrl.authorFilterField as branchesFound"
                             ng-class="{'status-warn': branch.IsOutdated,
                                        'status-bad': branch.IsMerged}">
-                            <td>{{branch.Name}}</td>
-                            <td>{{branch.Author}}</td>
-                            <td>{{branch.LastUpdated}}</td>
-                            <td>{{branch.IsMerged ? 'yes' : 'no'}}</td>
-                            <td>{{branch.IsOutdated ? 'yes' : 'no'}}</td>
+                            <td>{{::branch.Name}}</td>
+                            <td>{{::branch.Author}}</td>
+                            <td>{{::branch.LastUpdated}}</td>
+                            <td>{{::branch.IsMerged ? 'yes' : 'no'}}</td>
+                            <td>{{::branch.IsOutdated ? 'yes' : 'no'}}</td>
                         </tr>
                     </tbody>
                 </table>
