@@ -18,6 +18,7 @@ type Branch struct {
 	LastUpdated time.Time
 }
 
+// Saves branch to a storage
 func (branch *Branch) Save(database *bolt.DB) error {
 	err := database.Update(func(tx *bolt.Tx) error {
 		b, err := tx.CreateBucketIfNotExists(bucket)
@@ -34,6 +35,7 @@ func (branch *Branch) Save(database *bolt.DB) error {
 	return err
 }
 
+// Gets list of branches from a storage
 func GetBranches(database *bolt.DB) ([]Branch, error) {
 	var branches []Branch
 
@@ -41,8 +43,8 @@ func GetBranches(database *bolt.DB) ([]Branch, error) {
 		bucket := tx.Bucket(bucket)
 		errForEach := bucket.ForEach(func(key, value []byte) error {
 			branch := Branch{}
-			errJson := json.Unmarshal(value, &branch)
-			if errJson != nil {
+
+			if errJson := json.Unmarshal(value, &branch); errJson != nil {
 				return errJson
 			}
 			branches = append(branches, branch)
@@ -52,4 +54,15 @@ func GetBranches(database *bolt.DB) ([]Branch, error) {
 	})
 
 	return branches, errView
+}
+
+// Cleans branches in a storage
+func CleanBranches(database *bolt.DB) error {
+	err := database.Update(func(tx *bolt.Tx) error {
+		if errDelete := tx.DeleteBucket(bucket); errDelete != nil {
+			return errDelete
+		}
+		return nil
+	})
+	return err
 }

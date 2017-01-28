@@ -119,6 +119,10 @@ func GetBranchesInfoForRepo(repoName string) []Branch {
 // Iterates through repositories, gets data and saves it to a database
 func GetBranchesInfoForRepos(repositories []string, database *bolt.DB) {
 
+	if err := CleanBranches(database); err != nil {
+		fmt.Errorf("Can't clean branches database: %s", err)
+	}
+
 	for _, repoName := range repositories {
 		branches := GetBranchesInfoForRepo(repoName)
 
