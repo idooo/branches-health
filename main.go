@@ -74,6 +74,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	core.InitBranchesBucket(database)
 
 	// Schedule job to run regularly
 	c := cron.New()

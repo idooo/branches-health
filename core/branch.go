@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/boltdb/bolt"
 	"time"
+	"log"
 )
 
 var bucket = []byte("branches")
@@ -16,6 +17,16 @@ type Branch struct {
 	IsOutdated  bool
 	Author      string
 	LastUpdated time.Time
+}
+
+func InitBranchesBucket(database *bolt.DB) {
+	database.Update(func(tx *bolt.Tx) error {
+		_, err := tx.CreateBucketIfNotExists(bucket)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return nil
+	})
 }
 
 // Saves branch to a storage
@@ -37,7 +48,7 @@ func (branch *Branch) Save(database *bolt.DB) error {
 
 // Gets list of branches from a storage
 func GetBranches(database *bolt.DB) ([]Branch, error) {
-	var branches []Branch
+	var branches = []Branch{}
 
 	errView := database.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket(bucket)
