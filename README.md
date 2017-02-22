@@ -37,6 +37,10 @@ Read [robfig/cron docs](https://godoc.org/github.com/robfig/cron) to know more a
   ],
   "DatabasePath": "/tmp/branches-health.db",
   "ServerPort": 8080,
+  "BranchesToIgnore": [
+    "refactor",
+    "develop"
+  ],
   "UpdateSchedule": "@midnight" 
 }
 ```

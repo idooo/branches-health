@@ -59,7 +59,7 @@ func resetDir() error {
 	return os.Chdir(currentDir)
 }
 
-func GetBranchesInfoForRepo(repoName string) []Branch {
+func GetBranchesInfoForRepo(repoName string, ignore *regexp.Regexp) []Branch {
 	fmt.Printf("Getting information about %s\n", repoName)
 	branches := make([]Branch, 0)
 
@@ -84,16 +84,10 @@ func GetBranchesInfoForRepo(repoName string) []Branch {
 		return branches
 	}
 
-	// Ignore some branches
-	master := regexp.MustCompile("(origin/HEAD|origin/master)")
-
 	// Get info about merged branches
 	merged := runGitCommand([]string{"branch", "-r", "--merged"})
 	for _, branchName := range strings.Split(merged, "\n") {
-		if master.MatchString(strings.TrimSpace(branchName)) {
-			continue
-		}
-		if len(branchName) == 0 {
+		if len(branchName) == 0 || ignore.MatchString(strings.TrimSpace(branchName)) {
 			continue
 		}
 		branches = append(branches, formatBranchData(repoName, strings.TrimSpace(branchName), true, true))
@@ -102,7 +96,7 @@ func GetBranchesInfoForRepo(repoName string) []Branch {
 	// Get info about not merged branches
 	notMerged := runGitCommand([]string{"branch", "-r", "--no-merged"})
 	for _, branchName := range strings.Split(notMerged, "\n") {
-		if len(branchName) == 0 {
+		if len(branchName) == 0 || ignore.MatchString(strings.TrimSpace(branchName)) {
 			continue
 		}
 		logLastMonth := runGitCommand([]string{"log", "-1", "--since='1 month ago'", "-s", strings.TrimSpace(branchName), "--oneline"})
@@ -117,14 +111,21 @@ func GetBranchesInfoForRepo(repoName string) []Branch {
 }
 
 // Iterates through repositories, gets data and saves it to a database
-func GetBranchesInfoForRepos(repositories []string, database *bolt.DB) {
+func GetBranchesInfoForRepos(repositories []string, branchesToIgnore []string, database *bolt.DB) {
 
 	if err := CleanBranches(database); err != nil {
 		fmt.Errorf("Can't clean branches database: %s", err)
 	}
 
+	// Generate ignore string to skip some branches
+	branchesToIgnoreStr := "(" + strings.Join(append(branchesToIgnore, "origin/HEAD", "origin/master"), "|") + ")"
+	branchesPatternToIngore, regexpErr := regexp.Compile(branchesToIgnoreStr)
+	if regexpErr != nil {
+		log.Fatalf("Invalid list of ignored branches, failed to create regexp %s", branchesToIgnoreStr)
+	}
+
 	for _, repoName := range repositories {
-		branches := GetBranchesInfoForRepo(repoName)
+		branches := GetBranchesInfoForRepo(repoName, branchesPatternToIngore)
 
 		for _, branch := range branches {
 			log.Printf("Get information about: %s/%s", repoName, branch.Name)

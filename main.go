@@ -13,10 +13,11 @@ import (
 )
 
 type Configuration struct {
-	Repositories   *[]string
-	DatabasePath   *string
-	ServerPort     *int
-	UpdateSchedule *string
+	Repositories   		*[]string
+	DatabasePath   		*string
+	ServerPort     		*int
+	BranchesToIgnore 	*[]string
+	UpdateSchedule		*string
 }
 
 // Reads configuration file from the specified location and
@@ -51,6 +52,11 @@ func readConfig(filename string) Configuration {
 		configuration.UpdateSchedule = &defaultSchedule
 	}
 
+	if configuration.BranchesToIgnore == nil {
+		defaultBranchesToIgnore := make([]string, 0)
+		configuration.BranchesToIgnore = &defaultBranchesToIgnore
+	}
+
 	return configuration
 }
 
@@ -79,12 +85,12 @@ func main() {
 	// Schedule job to run regularly
 	c := cron.New()
 	c.AddFunc(*configuration.UpdateSchedule, func() {
-		core.GetBranchesInfoForRepos(*configuration.Repositories, database)
+		core.GetBranchesInfoForRepos(*configuration.Repositories, *configuration.BranchesToIgnore, database)
 	})
 	c.Start()
 
 	// Execute our first job
-	go core.GetBranchesInfoForRepos(*configuration.Repositories, database)
+	go c.Entries()[0].Job.Run()
 
 	// Setup Iris to serve HTTP requests
 	router := core.NewRouter(database, *assetsPathPtr)
