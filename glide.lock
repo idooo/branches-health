@@ -1,128 +1,103 @@
-hash: 0248fbb504a79deff720be6bc16f9d4e0ae9f6b93f64f77fffe9ac92682232fa
-updated: 2017-01-08T13:44:49.540345+10:00
+hash: 03299c538d4e74b8180039e10e688be72a3f69a89e0ab92395c38fc93f69672a
+updated: 2017-08-20T17:17:33.861066083+10:00
 imports:
+- name: github.com/aymerick/raymond
+  version: 72acac2207479d21dd45898c2a4264246c818148
+  subpackages:
+  - ast
+  - lexer
+  - parser
 - name: github.com/boltdb/bolt
-  version: 583e8937c61f1af6513608ccc75c97b6abdf4ff9
+  version: 2f1ce7a837dcb8da3ec595b1dac9d0632f0f99e8
+- name: github.com/BurntSushi/toml
+  version: a368813c5e648fee92e5f6c30e3944ff9d5e8895
+- name: github.com/eknkc/amber
+  version: b8bd8b03e4f747e33f092617225e9fa8076c0448
+  subpackages:
+  - parser
 - name: github.com/fatih/structs
-  version: dc3312cb1a4513a366c4c9e622ad55c32df12ed3
-- name: github.com/geekypanda/httpcache
-  version: 76ba6c68462ae362cda7564c44492b95322b363a
-  subpackages:
-  - internal
-  - internal/fhttp
-  - internal/fhttp/rule
-  - internal/nethttp
-  - internal/nethttp/rule
-  - internal/server
-- name: github.com/google/go-github
-  version: 939928b912496ed4fbeb6e4beb2467b4fa540af7
-  subpackages:
-  - github
-- name: github.com/google/go-querystring
-  version: 9235644dd9e52eeae6fa48efd539fdc351a0af53
-  subpackages:
-  - query
-- name: github.com/gorilla/websocket
-  version: 0868951cdb8e69bc42df4598bdc6164ff2f1a072
-- name: github.com/hashicorp/go-version
-  version: e96d3840402619007766590ecea8dd7af1292276
-- name: github.com/imdario/mergo
-  version: 50d4dbd4eb0e84778abe37cefef140271d96fade
-- name: github.com/iris-contrib/formBinder
-  version: 81b6a071e35797b83562caf4b3cad24dc01912dc
-- name: github.com/iris-contrib/lego
-  version: 095d7f6459c501cb15319aa2754afa221b81a3ec
-  subpackages:
-  - acme
-- name: github.com/iris-contrib/letsencrypt
-  version: 1a3e5c619a13b307df3b1b4da7cb7e57d2e156dd
-- name: github.com/iris-contrib/websocket
-  version: cc9f1712095295a828e9a2efaef388d30b9c7760
-- name: github.com/kataras/go-errors
-  version: 0f977b82cc78d5d31bb75fb6f903ad9e852c8bbd
-- name: github.com/kataras/go-fs
-  version: c029e113d9faaf558b730f06041c8bf9545a3502
-- name: github.com/kataras/go-options
-  version: 23b556c1b935c594ec6d71ff81ead4dbeec3aa8d
-- name: github.com/kataras/go-serializer
-  version: 0bd874a15c70db74ef2e668e5eeda27041f03b81
-  subpackages:
-  - data
-  - json
-  - jsonp
-  - markdown
-  - text
-  - xml
-- name: github.com/kataras/go-sessions
-  version: 121451b5aa447479500f09db7f08880627326357
-- name: github.com/kataras/go-template
-  version: 457f21178102f4688603eccbb4f2e8d5ae1023bf
-  subpackages:
-  - html
-- name: github.com/kataras/go-websocket
-  version: c729bee5acd8f738a3e8f7dd675430aede00c21f
+  version: 7e5a8eef611ee84dd359503f3969f80df4c50723
+- name: github.com/flosch/pongo2
+  version: 58f1f3387f7c57843ff829d92a759d08abe5a63f
+- name: github.com/Joker/jade
+  version: 35b3f5bdbcc920cd31f4870536dbc63be8530541
+- name: github.com/json-iterator/go
+  version: 887789156aeca0b292a5080b24e650d856c28933
+- name: github.com/juju/errors
+  version: c7d06af17c68cd34c835053720b21f6549d9b0ee
+- name: github.com/kataras/golog
+  version: 2ed680e7b1f34147164fa8073373e14fce02ac30
 - name: github.com/kataras/iris
-  version: bfac948889256ebe36e3a1b2b2dc32bbd3c7e82a
+  version: f5fae51a2c39cc8a4e1caa21566cbc4d421987af
   subpackages:
-  - utils
+  - cache
+  - cache/cfg
+  - cache/client
+  - cache/client/rule
+  - cache/entry
+  - cache/ruleset
+  - cache/uri
+  - context
+  - core/errors
+  - core/handlerconv
+  - core/host
+  - core/memstore
+  - core/netutil
+  - core/router
+  - core/router/macro
+  - core/router/macro/interpreter/ast
+  - core/router/macro/interpreter/lexer
+  - core/router/macro/interpreter/parser
+  - core/router/macro/interpreter/token
+  - core/router/node
+  - middleware/logger
+  - middleware/recover
+  - mvc
+  - mvc/activator
+  - sessions
+  - view
+- name: github.com/kataras/pio
+  version: 825e39f34365e7db2c9fbc3692c16220e3bd7418
+  subpackages:
+  - terminal
 - name: github.com/klauspost/compress
-  version: e3b7981a12dd3cab49afa1d3a50e715846f23732
+  version: f3dce52e0576655d55fd69e74b63da96ad1108f3
   subpackages:
   - flate
   - gzip
-  - zlib
 - name: github.com/klauspost/cpuid
-  version: 09cded8978dc9e80714c4d85b0322337b0a1e5e0
-- name: github.com/klauspost/crc32
-  version: cb6bfca970f6908083f26f39a79009d608efd5cd
+  version: ae7887de9fa5d2db4eaa8174a7eff2c1ac00f2da
 - name: github.com/microcosm-cc/bluemonday
-  version: e79763773ab6222ca1d5a7cbd9d62d83c1f77081
-- name: github.com/miekg/dns
-  version: 4744e915eb51a9defb5fb13c24ce2c8408d2fd98
+  version: f0d1606e9e60cb2428f85ddcbfcccfeb6b507586
+- name: github.com/monoculum/formam
+  version: f25191ae7744720978b0a6431764360b09b327a5
 - name: github.com/robfig/cron
   version: b024fc5ea0e34bc3f83d9941c8d60b0622bfaca4
 - name: github.com/russross/blackfriday
-  version: 5f33e7b7878355cd2b7e6b8eefc48a5472c69f70
-- name: github.com/shurcooL/sanitized_anchor_name
-  version: 1dba4b3954bc059efc3991ec364f9f9a35f597d2
-- name: github.com/square/go-jose
-  version: 50df5ca198e569d06795909c091ac0cea62e925a
-  subpackages:
-  - cipher
-  - json
-- name: github.com/valyala/bytebufferpool
-  version: e746df99fe4a3986f4d4f79e13c1e0117ce9c2f7
-- name: github.com/valyala/fasthttp
-  version: 1dc5bc133b3436ba3e2a3a0690e94e26b9d823b2
-  subpackages:
-  - fasthttpadaptor
-  - fasthttputil
-  - stackless
+  version: 4048872b16cc0fc2c5fd9eacf0ed2c2fedaa0c8c
+- name: github.com/ryanuber/columnize
+  version: abc90934186a77966e2beeac62ed966aac0561d5
+- name: github.com/satori/go.uuid
+  version: 5bf94b69c6b68ee1b541973bb8e1144db23a194b
 - name: golang.org/x/crypto
-  version: 9a6f0a01987842989747adff311d80750ba25530
+  version: eb71ad9bd329b5ac0fd0148dd99bd62e8be8e035
   subpackages:
   - acme
   - acme/autocert
-  - ocsp
 - name: golang.org/x/net
-  version: cfae461cedfdcab6e261a26eb77db53695623303
+  version: 1c05540f6879653db88113bc4a2b70aec4bd491f
   subpackages:
-  - context
-  - context/ctxhttp
   - html
   - html/atom
-  - publicsuffix
 - name: golang.org/x/sys
-  version: d75a52659825e75fff6158388dddc6a5b04f9ba5
+  version: 43e60d72a8e2bd92ee98319ba9a384a0e9837c08
   subpackages:
   - unix
-- name: golang.org/x/time
-  version: f51c12702a4d776e4c1fa9b0fabab841babae631
-  subpackages:
-  - rate
 - name: gopkg.in/square/go-jose.v1
   version: 296c7f1463ec9b712176dc804dea0173d06dc728
   subpackages:
   - cipher
   - json
+- name: gopkg.in/yaml.v2
+  version: eb3733d160e74a9c7e442f435eb3bea458e1d19f
 testImports: []

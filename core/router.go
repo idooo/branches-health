@@ -2,16 +2,18 @@ package core
 
 import (
 	"fmt"
+	"io/ioutil"
+
 	"github.com/boltdb/bolt"
 	"github.com/kataras/iris"
-	"io/ioutil"
+	"github.com/kataras/iris/context"
 )
 
 var database *bolt.DB
 var pathToAssets string
 
 type API struct {
-	*iris.Context
+	context.Context
 }
 
 func NewRouter(db *bolt.DB, assetsPath string) API {
@@ -26,10 +28,11 @@ func NewRouter(db *bolt.DB, assetsPath string) API {
 	return API{}
 }
 
-func (api API) RouteGetRepositories(ctx *iris.Context) {
+func (api API) RouteGetRepositories(ctx context.Context) {
 	branches, err := GetBranches(database)
 	if err != nil {
-		ctx.JSON(iris.StatusNotFound, iris.Map{"status": "error"})
+		ctx.StatusCode(iris.StatusNotFound)
+		ctx.JSON(map[string]interface{}{"status": "error"})
 	} else {
 		repositories := make(map[string][]Branch)
 
@@ -40,27 +43,32 @@ func (api API) RouteGetRepositories(ctx *iris.Context) {
 			repositories[branch.Repository] = append(repositories[branch.Repository], branch)
 		}
 
-		ctx.JSON(iris.StatusOK, repositories)
+		ctx.StatusCode(iris.StatusOK)
+		ctx.JSON(repositories)
 	}
 }
 
-func (api API) RouteGetBranches(ctx *iris.Context) {
+func (api API) RouteGetBranches(ctx context.Context) {
 	branches, err := GetBranches(database)
 	if err != nil {
-		ctx.JSON(iris.StatusNotFound, iris.Map{"status": "error"})
+		ctx.StatusCode(iris.StatusNotFound)
+		ctx.JSON(map[string]interface{}{"status": "error"})
 	} else {
-		ctx.JSON(iris.StatusOK, iris.Map{"branches": branches})
+		ctx.StatusCode(iris.StatusOK)
+		ctx.JSON(map[string]interface{}{"branches": branches})
 	}
 }
 
-func (api API) RouteGetIndex(ctx *iris.Context) {
+func (api API) RouteGetIndex(ctx context.Context) {
 	if len(pathToAssets) > 0 {
 		data, err := ioutil.ReadFile(pathToAssets + "/index.html")
 		if err != nil {
 			fmt.Printf("Can't open index.html: %s", err)
 		}
-		ctx.HTML(iris.StatusOK, string(data))
+		ctx.StatusCode(iris.StatusOK)
+		ctx.HTML(string(data))
 	} else {
-		ctx.HTML(iris.StatusOK, IndexTemplate)
+		ctx.StatusCode(iris.StatusOK)
+		ctx.HTML(IndexTemplate)
 	}
 }

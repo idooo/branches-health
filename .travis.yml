@@ -1,6 +1,6 @@
 language: go
 go:
-    - 1.7.x
+    - 1.8.x
 install:
     - go get -v github.com/Masterminds/glide
     - cd $GOPATH/src/github.com/Masterminds/glide && go install && cd -
