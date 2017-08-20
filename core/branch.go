@@ -2,9 +2,10 @@ package core
 
 import (
 	"encoding/json"
-	"github.com/boltdb/bolt"
-	"time"
 	"log"
+	"time"
+
+	"github.com/boltdb/bolt"
 )
 
 var bucket = []byte("branches")
@@ -50,7 +51,10 @@ func (branch *Branch) Save(database *bolt.DB) error {
 func GetBranches(database *bolt.DB) ([]Branch, error) {
 	var branches = []Branch{}
 
+	InitBranchesBucket(database)
+
 	errView := database.View(func(tx *bolt.Tx) error {
+
 		bucket := tx.Bucket(bucket)
 		errForEach := bucket.ForEach(func(key, value []byte) error {
 			branch := Branch{}
