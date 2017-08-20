@@ -2,8 +2,6 @@ package: github.com/idooo/branches-health
 import:
 - package: github.com/boltdb/bolt
   version: ~1.3.0
-- package: github.com/kataras/iris
-  version: ~5.0.0
 - package: gopkg.in/square/go-jose.v1
   version: ~2.0.1
   subpackages:
@@ -11,3 +9,5 @@ import:
   - json
 - package: github.com/robfig/cron
   version: ~1.0.0
+- package: github.com/kataras/iris
+  version: 8.3.0

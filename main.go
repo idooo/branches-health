@@ -4,20 +4,22 @@ import (
 	"branches-health/core"
 	"encoding/json"
 	"flag"
+	"log"
+	"os"
+
 	"github.com/boltdb/bolt"
 	"github.com/kataras/iris"
 	"github.com/robfig/cron"
-	"log"
-	"os"
+
 	"strconv"
 )
 
 type Configuration struct {
-	Repositories   		*[]string
-	DatabasePath   		*string
-	ServerPort     		*int
-	BranchesToIgnore 	*[]string
-	UpdateSchedule		*string
+	Repositories     *[]string
+	DatabasePath     *string
+	ServerPort       *int
+	BranchesToIgnore *[]string
+	UpdateSchedule   *string
 }
 
 // Reads configuration file from the specified location and
@@ -94,8 +96,10 @@ func main() {
 
 	// Setup Iris to serve HTTP requests
 	router := core.NewRouter(database, *assetsPathPtr)
-	iris.Get("/api/repositories", router.RouteGetRepositories)
-	iris.Get("/api/branches", router.RouteGetBranches)
-	iris.Get("/", router.RouteGetIndex)
-	iris.Listen(":" + strconv.Itoa(*configuration.ServerPort))
+
+	app := iris.New()
+	app.Get("/api/repositories", router.RouteGetRepositories)
+	app.Get("/api/branches", router.RouteGetBranches)
+	app.Get("/", router.RouteGetIndex)
+	app.Run(iris.Addr(":"+strconv.Itoa(*configuration.ServerPort)), iris.WithoutVersionChecker)
 }
