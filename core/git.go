@@ -3,7 +3,6 @@ package core
 import (
 	"bytes"
 	"fmt"
-	"github.com/boltdb/bolt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -13,17 +12,24 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/boltdb/bolt"
 )
 
 func runGitCommand(args []string) string {
 	cmd := exec.Command("git", args...)
 
 	var out bytes.Buffer
+	var error bytes.Buffer
 	cmd.Stdout = &out
+	cmd.Stderr = &error
 
 	err := cmd.Run()
 	if err != nil {
 		fmt.Errorf("Command failed %s : %s", strings.Join(args, " "), err)
+	}
+	if len(error.String()) != 0 {
+		fmt.Printf("Command failed %s : %s\n", strings.Join(args, " "), error.String())
 	}
 	return out.String()
 }
@@ -128,7 +134,7 @@ func GetBranchesInfoForRepos(repositories []string, branchesToIgnore []string, d
 		branches := GetBranchesInfoForRepo(repoName, branchesPatternToIngore)
 
 		for _, branch := range branches {
-			log.Printf("Get information about: %s/%s", repoName, branch.Name)
+			log.Printf(">>> %s/%s", repoName, branch.Name)
 			branch.Save(database)
 		}
 	}
