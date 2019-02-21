@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
+	"os/user"
 	"log"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -61,8 +61,11 @@ func formatBranchData(repoName, branchName string, isMerged, isOutdated bool) Br
 }
 
 func resetDir() error {
-	currentDir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
-	return os.Chdir(currentDir)
+	usr, err := user.Current()
+    if err != nil {
+        log.Fatal( err )
+    }
+	return os.Chdir(usr.HomeDir )
 }
 
 func GetBranchesInfoForRepo(repoName string, ignore *regexp.Regexp) []Branch {
