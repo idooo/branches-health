@@ -11,8 +11,10 @@ script:
 - go build
 deploy:
   provider: releases
+  skip_cleanup: true
   api_key:
     secure: onv6H6NxPDZh+AVCjythsSFgLjo0zCSW6etjgyrZfRzZD422PaLuTSNmloib0k7XsKyJDj8K+pr9mbhpJ6E+EF0Him8HE8RA8t5n2Z5Q0XW1P0eZ6nsuBgVlNQlPDsvx8oQ0NbBekwHtvUzqOXZV2zwkYgEMciafL9O5a3GVDNxP4sGeWjxLW+go5Hz5D/uM07dKfOoV0eOGbQZcFfvtohDbLVncEALYPrbjvPGv4kgKvOLve1PoKYeVftQ9WyxG+9ghrg4bGU/66M6aCenQgtLrxy65ke92Jpsti252IVko5X5E/acyrvz3d4Q5Fm/PqNgHTIxOfS/chV4tzwOF1SXZtvoUc8BibPnT8TPJtkuDOPglZTsdJpKyfSNqxjEVV5A/lTSoRTGeUwH6sjU/EkQec7Lm+gYqaUyF3Jhd/4+2z6Cg5BBuosXMhtlyTdL1nvWPobSRQ/tZJe1Zk5I9TPf/mmIQ0MqW0PVhuKLmz3VAMkdWz1qcmyMN7GBfzmKfXFA+DaeU9IY+M3/393SFB3T9eG5yXPNP8vBjm8i9tpvsanbMPvPQA94CZiPaF7TIWq0gWgq4V3ZahQCSTY5Gts7UbJBoI2MYIHENeNZSYQNJDxq/9txW2m0Af/zcil4mzSDq0YTgLBcUNW9wtaWJWDBgKDamqkcxg2Oj0ih46zQ=
   file: branches-health
   on:
     repo: idooo/branches-health
+    tags: true
