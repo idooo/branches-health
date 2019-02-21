@@ -1,20 +1,18 @@
 language: go
 go:
-    - 1.8.x
+- 1.8.x
 install:
-    - go get -v github.com/Masterminds/glide
-    - cd $GOPATH/src/github.com/Masterminds/glide && go install && cd -
-    - glide install
-    - mkdir -p $TRAVIS_BUILD_DIR/vendor/branches-health/ && cp -r $TRAVIS_BUILD_DIR/core $TRAVIS_BUILD_DIR/vendor/branches-health/
+- go get -v github.com/Masterminds/glide
+- cd $GOPATH/src/github.com/Masterminds/glide && go install && cd -
+- glide install
+- mkdir -p $TRAVIS_BUILD_DIR/vendor/branches-health/ && cp -r $TRAVIS_BUILD_DIR/core
+  $TRAVIS_BUILD_DIR/vendor/branches-health/
 script:
-    - go build
+- go build
 deploy:
   provider: releases
-  skip_cleanup: true
   api_key:
-    secure: WZdYs0WGnKvN7dcG1W52K0EF1lShlPlrAp0dsnZ0rRE03xOphEl4HHNPrKDyaareUzZODX2CmB8Gz3K0Kb+GGO0WTQNP/SNwl5Eh1fCkW8ODFQkSqu6C6o/zE2EnE+goPGrCA4wdYhZHEM3PqTCjHVzpZQsAYPOweCaji7tLENd9k4mHkfm0dm8tYz0CcSPHH0E8IFWAxB78+oVftI6D6VziPhhmwpeTNM4qTUH2kDHWFWSlTv5RC5FyfbhXraa2ta2/k4AbyjhEc9EZK3dX1dxCSUhfoddepc8DpdO0O+4/Mdxl3ieLLJj/0i94sYxg/W4xw13t/Dbtq350bXvupzCiksCMBcYverDER70dToeHqdWFmJXX3hB+f0qTZjvY3BzfQ/kXD0sEuseRqmjpPWScJL8laxKjzqqiFpwI44prbnhJByxp/P6oWuL8rQlgYpqkrvJyXa90SgYkj1kkH2Qzxc/tbosZfthR/PGyVq58E0Mg9fMx3F4LPnIEocAcz1fiwEiy8+CnrH1KSfb1+O06c5nPHsGWeAy6h+V3UQChDf2DmChzLsdVU501c7S86LoY8stAMrm6OYq0fy2U50i6Sc9JVcwivK3kCvcB5FI10PoxxPQvQNySs5D7y41lrJMdf3dC8Gf70zUsgKKTe4FknohTV57+0xVBHlXJM9Q=
-  file:
-    - branches-health
+    secure: onv6H6NxPDZh+AVCjythsSFgLjo0zCSW6etjgyrZfRzZD422PaLuTSNmloib0k7XsKyJDj8K+pr9mbhpJ6E+EF0Him8HE8RA8t5n2Z5Q0XW1P0eZ6nsuBgVlNQlPDsvx8oQ0NbBekwHtvUzqOXZV2zwkYgEMciafL9O5a3GVDNxP4sGeWjxLW+go5Hz5D/uM07dKfOoV0eOGbQZcFfvtohDbLVncEALYPrbjvPGv4kgKvOLve1PoKYeVftQ9WyxG+9ghrg4bGU/66M6aCenQgtLrxy65ke92Jpsti252IVko5X5E/acyrvz3d4Q5Fm/PqNgHTIxOfS/chV4tzwOF1SXZtvoUc8BibPnT8TPJtkuDOPglZTsdJpKyfSNqxjEVV5A/lTSoRTGeUwH6sjU/EkQec7Lm+gYqaUyF3Jhd/4+2z6Cg5BBuosXMhtlyTdL1nvWPobSRQ/tZJe1Zk5I9TPf/mmIQ0MqW0PVhuKLmz3VAMkdWz1qcmyMN7GBfzmKfXFA+DaeU9IY+M3/393SFB3T9eG5yXPNP8vBjm8i9tpvsanbMPvPQA94CZiPaF7TIWq0gWgq4V3ZahQCSTY5Gts7UbJBoI2MYIHENeNZSYQNJDxq/9txW2m0Af/zcil4mzSDq0YTgLBcUNW9wtaWJWDBgKDamqkcxg2Oj0ih46zQ=
+  file: branches-health
   on:
     repo: idooo/branches-health
-    tags: true

@@ -96,7 +96,7 @@
             old: []
         };
 
-        $http.get('/api/branches').then(response => {
+        $http.get('./api/branches').then(response => {
             const branches = response.data.branches;
             const people = {};
             branches.forEach(branch => {
@@ -125,7 +125,7 @@
                 .forEach(name => this.people.push(Object.assign({name}, people[name])));
         });
 
-        $http.get('/api/repositories').then(response => {
+        $http.get('./api/repositories').then(response => {
             this.repositories = response.data;
             Object.keys(this.repositories).forEach(repositoryName => {
                 this.repositories[repositoryName] = this.repositories[repositoryName]
